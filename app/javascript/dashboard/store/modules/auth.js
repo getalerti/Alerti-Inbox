@@ -7,7 +7,7 @@ import createAxios from '../../helper/APIHelper';
 import actionCable from '../../helper/actionCable';
 import { setUser, getHeaderExpiry, clearCookiesOnLogout } from '../utils/api';
 import { DEFAULT_REDIRECT_URL } from '../../constants';
-
+import { getInstance } from '../../../packs/auth0';
 const state = {
   currentUser: {
     id: null,
@@ -66,6 +66,31 @@ export const actions = {
     return new Promise((resolve, reject) => {
       authAPI
         .login(credentials)
+        .then(() => {
+          commit(types.default.SET_CURRENT_USER);
+          window.axios = createAxios(axios);
+          actionCable.init(Vue);
+          window.location = DEFAULT_REDIRECT_URL;
+          resolve();
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  },
+  async loginWithAuth0({ commit }) {
+    const authService = getInstance();
+    await authService.loginWithPopup();
+    let user = await getInstance().getUserInfo();
+    let token = await getInstance().getTokenSilently();
+    const creds = {
+      email: user.email,
+      password: '123456',
+      tokenAuth0: token,
+    };
+    return new Promise((resolve, reject) => {
+      authAPI
+        .login(creds)
         .then(() => {
           commit(types.default.SET_CURRENT_USER);
           window.axios = createAxios(axios);

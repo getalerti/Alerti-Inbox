@@ -1,3 +1,4 @@
+logger.info 'Processing the request... ########################################2'
 json.access_token resource.access_token.token
 json.account_id resource.active_account_user&.account_id
 json.availability_status resource.availability_status

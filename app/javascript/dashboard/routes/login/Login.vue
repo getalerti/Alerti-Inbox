@@ -14,9 +14,9 @@
     </div>
     <div class="row align-center">
       <div v-if="!email" class="small-12 medium-4 column">
-        <form class="login-box column align-self-top" @submit.prevent="login()">
+        <div class="login-box column align-self-top">
           <div class="column log-in-form">
-            <label :class="{ error: $v.credentials.email.$error }">
+<!--             <label :class="{ error: $v.credentials.email.$error }">
               {{ $t('LOGIN.EMAIL.LABEL') }}
               <input
                 v-model.trim="credentials.email"
@@ -46,10 +46,13 @@
               :loading="loginApi.showLoading"
               button-class="large expanded"
             >
+            </woot-submit-button> -->
+            <woot-submit-button button-class="large expanded" :button-text="$t('LOGIN.SUBMIT')" @click="loginWithAuth0">
+            </woot-submit-buttonn>
             </woot-submit-button>
           </div>
-        </form>
-        <div class="column text-center sigin__footer">
+        </div>
+<!--         <div class="column text-center sigin__footer">
           <p>
             <router-link to="auth/reset/password">
               {{ $t('LOGIN.FORGOT_PASSWORD') }}
@@ -60,7 +63,7 @@
               {{ $t('LOGIN.CREATE_NEW_ACCOUNT') }}
             </router-link>
           </p>
-        </div>
+        </div> -->
       </div>
       <woot-spinner v-else size="" />
     </div>
@@ -72,7 +75,6 @@ import { required, email } from 'vuelidate/lib/validators';
 import globalConfigMixin from 'shared/mixins/globalConfigMixin';
 import WootSubmitButton from '../../components/buttons/FormSubmitButton';
 import { mapGetters } from 'vuex';
-
 export default {
   components: {
     WootSubmitButton,
@@ -130,7 +132,7 @@ export default {
     showSignupLink() {
       return window.chatwootConfig.signupEnabled === 'true';
     },
-    login() {
+/*     login() {
       this.loginApi.showLoading = true;
       const credentials = {
         email: this.email ? this.email : this.credentials.email,
@@ -147,15 +149,47 @@ export default {
           if (this.email) {
             window.location = '/app/login';
           }
-
           if (response && response.status === 401) {
-						const { errors } = response.data;
-						const hasAuthErrorMsg = errors && errors.length && errors[0] && typeof errors[0] === 'string';
+            const { errors } = response.data;
+            const hasAuthErrorMsg =
+              errors &&
+              errors.length &&
+              errors[0] &&
+              typeof errors[0] === 'string';
             if (hasAuthErrorMsg) {
               this.showAlert(errors[0]);
             } else {
-							this.showAlert(this.$t('LOGIN.API.UNAUTH'));
-						} 
+              this.showAlert(this.$t('LOGIN.API.UNAUTH'));
+            }
+            return;
+          }
+          this.showAlert(this.$t('LOGIN.API.ERROR_MESSAGE'));
+        });
+    }, */
+    loginWithAuth0() {
+      this.loginApi.showLoading = true;
+      this.$store
+        .dispatch('loginWithAuth0')
+        .then(() => {
+          this.showAlert(this.$t('LOGIN.API.SUCCESS_MESSAGE'));
+        })
+        .catch(response => {
+          // Reset URL Params if the authentication is invalid
+          if (this.email) {
+            window.location = '/app/login';
+          }
+          if (response && response.status === 401) {
+            const { errors } = response.data;
+            const hasAuthErrorMsg =
+              errors &&
+              errors.length &&
+              errors[0] &&
+              typeof errors[0] === 'string';
+            if (hasAuthErrorMsg) {
+              this.showAlert(errors[0]);
+            } else {
+              this.showAlert(this.$t('LOGIN.API.UNAUTH'));
+            }
             return;
           }
           this.showAlert(this.$t('LOGIN.API.ERROR_MESSAGE'));

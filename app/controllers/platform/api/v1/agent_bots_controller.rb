@@ -1,7 +1,6 @@
 class Platform::Api::V1::AgentBotsController < PlatformController
   before_action :set_resource, except: [:index, :create]
   before_action :validate_platform_app_permissible, except: [:index, :create]
-
   def index
     @resources = @platform_app.platform_app_permissibles.where(permissible_type: 'AgentBot').all
   end

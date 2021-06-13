@@ -1,7 +1,7 @@
 class Platform::Api::V1::AccountUsersController < PlatformController
   before_action :set_resource
   before_action :validate_platform_app_permissible
-
+  logger.info 'Processing the request... ########################################2'
   def index
     render json: @resource.account_users
   end

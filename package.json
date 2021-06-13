@@ -15,6 +15,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.15.0",
     "@chatwoot/prosemirror-schema": "https://github.com/chatwoot/prosemirror-schema.git#7e8acadd10d7b932c0dc0bd0a18f804434f83517",
     "@chatwoot/utils": "^0.0.3",
     "@rails/actioncable": "6.1.3",
@@ -69,6 +70,7 @@
     "@babel/core": "7.13.16",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/preset-env": "7.13.15",
+    "@prettier/plugin-ruby": "^1.5.5",
     "@storybook/addon-actions": "6.2.9",
     "@storybook/addon-docs": "^6.2.9",
     "@storybook/addon-essentials": "6.2.9",
@@ -99,7 +101,7 @@
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
     "lint-staged": "10.5.4",
-    "prettier": "^1.16.4",
+    "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
     "vue-jest": "3.0.7",
     "webpack-dev-server": "3.11.2"
