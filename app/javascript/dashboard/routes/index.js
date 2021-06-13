@@ -5,7 +5,7 @@ import login from './login/login.routes';
 import dashboard from './dashboard/dashboard.routes';
 import authRoute from './auth/auth.routes';
 import { frontendURL } from '../helper/URLHelper';
-
+import { getInstance } from '../../packs/auth0';
 const routes = [
   ...login.routes,
   ...dashboard.routes,
@@ -38,7 +38,6 @@ const generateRoleWiseRoute = route => {
 // accessible by each role.
 // returns an object with roles as keys and routeArr as values
 generateRoleWiseRoute(routes);
-
 export const router = new VueRouter({ mode: 'history', routes });
 
 const unProtectedRoutes = ['login', 'auth_signup', 'auth_reset_password'];
@@ -110,8 +109,10 @@ const validateRouteAccess = (to, from, next) => {
 
 // protecting routes
 router.beforeEach((to, from, next) => {
+  const authService = getInstance();
   if (!to.name) {
     const user = auth.getCurrentUser();
+    alert(JSON.stringify(authService.isAuthenticated));
     if (user) {
       return next(frontendURL(`accounts/${user.account_id}/dashboard`));
     }

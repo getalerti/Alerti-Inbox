@@ -64,6 +64,10 @@ export const useAuth0 = ({
       }
     },
     methods: {
+      async getUserInfo() {
+        let user = await this.auth0Client.getUser();
+        return user;
+      },
       /** Authenticates the user using a popup window */
       async loginWithPopup(options, config) {
         this.popupOpen = true;

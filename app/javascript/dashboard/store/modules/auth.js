@@ -7,7 +7,7 @@ import createAxios from '../../helper/APIHelper';
 import actionCable from '../../helper/actionCable';
 import { setUser, getHeaderExpiry, clearCookiesOnLogout } from '../utils/api';
 import { DEFAULT_REDIRECT_URL } from '../../constants';
-
+import { getInstance } from '../../../packs/auth0';
 const state = {
   currentUser: {
     id: null,
@@ -64,6 +64,7 @@ export const getters = {
 export const actions = {
   login({ commit }, credentials) {
     return new Promise((resolve, reject) => {
+      alert('loooool');
       authAPI
         .login(credentials)
         .then(() => {
@@ -78,8 +79,20 @@ export const actions = {
         });
     });
   },
+  async login2({ commit }) {
+    const authService = getInstance();
+    await authService.loginWithPopup();
+    let user = await getInstance().getUserInfo();
+    /* commit(types.default.SET_CURRENT_USER);
+    window.axios = createAxios(axios);
+    actionCable.init(Vue);
+    window.location = DEFAULT_REDIRECT_URL; */
+    console.log(JSON.stringify(user));
+    return user;
+  },
   async validityCheck(context) {
     try {
+      alert('hy');
       const response = await authAPI.validityCheck();
       setUser(response.data.payload.data, getHeaderExpiry(response));
       context.commit(types.default.SET_CURRENT_USER);

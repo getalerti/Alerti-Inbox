@@ -70,6 +70,7 @@
     "@babel/core": "7.13.16",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/preset-env": "7.13.15",
+    "@prettier/plugin-ruby": "^1.5.5",
     "@storybook/addon-actions": "6.2.9",
     "@storybook/addon-docs": "^6.2.9",
     "@storybook/addon-essentials": "6.2.9",
@@ -100,7 +101,7 @@
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
     "lint-staged": "10.5.4",
-    "prettier": "^1.16.4",
+    "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
     "vue-jest": "3.0.7",
     "webpack-dev-server": "3.11.2"

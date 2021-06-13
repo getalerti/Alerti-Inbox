@@ -2,6 +2,7 @@ class Platform::Api::V1::UsersController < PlatformController
   # ref: https://stackoverflow.com/a/45190318/939299
   # set resource is called for other actions already in platform controller
   # we want to add login to that chain as well
+  
   before_action(only: [:login]) { set_resource }
   before_action(only: [:login]) { validate_platform_app_permissible }
 
