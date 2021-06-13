@@ -109,10 +109,8 @@ const validateRouteAccess = (to, from, next) => {
 
 // protecting routes
 router.beforeEach((to, from, next) => {
-  const authService = getInstance();
   if (!to.name) {
     const user = auth.getCurrentUser();
-    alert(JSON.stringify(authService.isAuthenticated));
     if (user) {
       return next(frontendURL(`accounts/${user.account_id}/dashboard`));
     }

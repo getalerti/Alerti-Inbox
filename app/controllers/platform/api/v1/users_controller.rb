@@ -35,6 +35,6 @@ class Platform::Api::V1::UsersController < PlatformController
   end
 
   def user_params
-    params.permit(:name, :email, :password)
+    params.permit(:name, :email, :password, :tokenAuth0)
   end
 end

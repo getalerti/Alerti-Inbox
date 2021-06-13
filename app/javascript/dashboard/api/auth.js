@@ -7,10 +7,10 @@ import endPoints from './endPoints';
 import { setAuthCredentials, clearCookiesOnLogout } from '../store/utils/api';
 
 export default {
-  login(token) {
+  login(creds) {
     return new Promise((resolve, reject) => {
       axios
-        .post('auth/sign_in', token)
+        .post('auth/sign_in', creds)
         .then(response => {
           setAuthCredentials(response);
           resolve();

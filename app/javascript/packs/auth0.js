@@ -107,12 +107,14 @@ export const useAuth0 = ({
         return this.auth0Client.loginWithRedirect(o);
       },
       /** Returns all the claims present in the ID token */
-      getIdTokenClaims(o) {
-        return this.auth0Client.getIdTokenClaims(o);
+      async getIdTokenClaims(o) {
+        const result = await this.auth0Client.getIdTokenClaims(o);
+        return result;
       },
       /** Returns the access token. If the token is invalid or missing, a new one is retrieved */
-      getTokenSilently(o) {
-        return this.auth0Client.getTokenSilently(o);
+      async getTokenSilently(o) {
+        const result = await this.auth0Client.getTokenSilently(o);
+        return result;
       },
       /** Gets the access token using a popup window */
 

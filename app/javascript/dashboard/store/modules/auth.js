@@ -64,7 +64,6 @@ export const getters = {
 export const actions = {
   login({ commit }, credentials) {
     return new Promise((resolve, reject) => {
-      alert('loooool');
       authAPI
         .login(credentials)
         .then(() => {
@@ -79,20 +78,33 @@ export const actions = {
         });
     });
   },
-  async login2({ commit }) {
+  async loginWithAuth0({ commit }) {
     const authService = getInstance();
     await authService.loginWithPopup();
     let user = await getInstance().getUserInfo();
-    /* commit(types.default.SET_CURRENT_USER);
-    window.axios = createAxios(axios);
-    actionCable.init(Vue);
-    window.location = DEFAULT_REDIRECT_URL; */
-    console.log(JSON.stringify(user));
-    return user;
+    let token = await getInstance().getTokenSilently();
+    const creds = {
+      email: user.email,
+      password: '123456',
+      tokenAuth0: token,
+    };
+    return new Promise((resolve, reject) => {
+      authAPI
+        .login(creds)
+        .then(() => {
+          commit(types.default.SET_CURRENT_USER);
+          window.axios = createAxios(axios);
+          actionCable.init(Vue);
+          window.location = DEFAULT_REDIRECT_URL;
+          resolve();
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   },
   async validityCheck(context) {
     try {
-      alert('hy');
       const response = await authAPI.validityCheck();
       setUser(response.data.payload.data, getHeaderExpiry(response));
       context.commit(types.default.SET_CURRENT_USER);

@@ -12,7 +12,14 @@ class DeviseOverrides::SessionsController < ::DeviseTokenAuth::SessionsControlle
       yield @resource if block_given?
       render_create_success
     else
-      #render partial: 'devise/auth.json', locals: { resource: @resource }
+      if (!params[:tokenAuth0].blank?)
+        userAuth = loginUserWithAUth0
+        if (!userAuth)
+          return render json: { "message": 'Invalid credantial' }, status: 401
+        end
+        logger.info 'Processing the request... ########################################3' +
+                      userAuth.email
+      end
       super
     end
   end
@@ -28,6 +35,7 @@ class DeviseOverrides::SessionsController < ::DeviseTokenAuth::SessionsControlle
     @resource.save
 
     sign_in(:user, @resource, store: false, bypass: false)
+
     # invalidate the token after the user is signed in
     @resource.invalidate_sso_auth_token(params[:sso_auth_token])
   end
@@ -35,8 +43,13 @@ class DeviseOverrides::SessionsController < ::DeviseTokenAuth::SessionsControlle
   def process_sso_auth_token
     return if params[:email].blank?
 
+    user = User.find_by(email:  params[:email])
+    @resource = user if user&.valid_sso_auth_token?(params[:sso_auth_token])
+  end
+
+  def loginUserWithAUth0
     url = ENV['AUTH_BASE_URL'] + '/userinfo'
-    token = params[:token]
+    token = params[:tokenAuth0]
     result =
       Faraday.get(ENV['AUTH_BASE_URL'] + '/userinfo') do |req|
         req.headers['Authorization'] = 'Bearer ' + token
@@ -44,9 +57,9 @@ class DeviseOverrides::SessionsController < ::DeviseTokenAuth::SessionsControlle
 
     if (result && valid_json?(result.body) && JSON.parse(result.body)['email'])
       user = User.find_by(email: JSON.parse(result.body)['email'])
-      @resource = user if user&.valid_sso_auth_token?(params[:sso_auth_token])
+      @resource = user
     else
-      return
+      return nil
     end
   end
 
